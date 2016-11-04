@@ -314,21 +314,19 @@ class Validator():
 
 	# Prints the result of the validation
 	def printValidation(self, validation):
-
+		isCorrect = True
 		for nodeName in validation:
-			print "*********************************"
-			print "*********************************"
-			print "\nNODE TEMPLATE: ",nodeName
-			if validation.get(nodeName) == {}:
-				print 
-			for req in validation.get(nodeName).keys(): 
-				print "\n- Requirement:", req
-				for errorList in validation.get(nodeName).get(req):
-					print
-					self.printError(errorList)
-
-		print "*********************************"
-		print "*********************************"
+			reqs = validation.get(nodeName).keys()
+			for req in reqs:
+				infoList = validation.get(nodeName).get(req)
+				for info in infoList:
+					if info[0] is not 0:
+						isCorrect = False
+						print "NODE TEMPLATE: ",nodeName
+						print "REQUIREMENT: ",req
+						self.printError(info)
+		if isCorrect:
+			print "The application topology is valid."
 
 	# Returns a structure with the summarize of the validation
 	def validate(self, path):
