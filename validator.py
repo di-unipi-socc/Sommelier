@@ -291,26 +291,24 @@ class Validator():
 	def printError(self, errorList):
 
 		codeError = errorList[0]
-		if codeError == 0:
-			print '\tOK: the requirement is valid.\n'
-		elif codeError == 1:
+		if codeError == 1.1:
 			print '\tMISSING_REQUIREMENT_DEFINITION: the requirement is assigned but not defined.\n'
-		elif codeError == 2:
+		elif codeError == 1.2:
 			print '\tNODE_TYPE_NOT_COHERENT: the type "%s" of "%s" is not coherent with the required type.' % (errorList[1], errorList[2]), '\n'
-		elif codeError == 3.1:
+		elif codeError == 1.3:
 			print '\tCAPABILITY_TYPE_NOT_COHERENT: the capability type is not coherent with the required type.\n'
-		elif codeError == 3.2:
+		elif codeError == 1.4:
 			print '\tMISSING_CAPABILITY_ERROR: "%s" does not offer any capability of type "%s".' % (errorList[1], errorList[2]), '\n'
-		elif codeError == 4.0:
+		elif codeError == 1.5:
 			print '\tRELATIONSHIP_TYPE_NOT_COHERENT: the relationship with the target node "%s" is not valid.' % (errorList[1]), '\n'
-		elif codeError == 4.1:
+		elif codeError == 2.1:
 			print '\tCAPABILITY_VALID_TARGET_TYPE_ NOT_COHERENT: the capability type "%s" is not valid for the relationship.' %(errorList[1]), '\n'
-		elif codeError == 4.2:
+		elif codeError == 2.2:
 			print '\tMISSING_CAPABILITY_VALID_TARGET_TYPE: "%s" does not offer capabilities valid for the relationship.' % (errorList[1]), '\n'
-		elif codeError == 5:
-			print '\tNODE_VALID_SOURCE_TYPE_ NOT_COHERENT: the type "%s" is not supported as valid sources of the relationship established to the target node "%s".' % (errorList[1], errorList[2]), '\n'
-		elif codeError == 6:
+		elif codeError == 3.1:
 			print '\tCAPABILITY_VALID_SOURCE_TYPE_ NOT_COHERENT: the type "%s" is not supported as valid sources of the relationship established to the declared capability type.' % (errorList[1]), '\n'				 
+		elif codeError == 3.2:
+			print '\tCAPABILITY_DEFINITION_VALID_SOURCE_TYPE_NOT_COHERENT: the type "%s" is not supported as valid sources of the relationship established to the target node "%s".' % (errorList[1], errorList[2]), '\n'				 
 
 	# Prints the result of the validation
 	def printValidation(self, validation):
