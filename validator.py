@@ -355,7 +355,7 @@ class Validator():
 	                    # Gets the requirement definition of "rName"
 	                    reqDef = self.getRequirementDefinition(rName,node.type)
 	                    if (reqDef is None):
-	                        reqError.append([1.0])
+	                        reqError.append([1.1])
 	                    else:
 	                        # Isolates the names of the target node and capability
 	                        targetNode = None
@@ -381,13 +381,13 @@ class Validator():
 
 	                        # Checks whether the target node type is coherent with that declared in "reqDef"
 	                        if (self.checkNodeType(reqDef,targetNode.type) is False):
-	                            reqError.append([2.0, targetNode.type, targetNode.name])
+	                            reqError.append([1.2, targetNode.type, targetNode.name])
 
 	                        # Assigns the capability type of the target node to "targetCapabilityType"
 	                        if targetCapability is not None:
 	                            # Checks whether the target node capability is coherent with that declared in "reqDef"
 	                            if self.checkCapabilityType(reqDef, targetCapability, targetNode) is False:  
-	                                reqError.append([3.1])
+	                                reqError.append([1.3])
 
 	                        else:
 	                            # Retrieves the capabilities of the target node
@@ -395,14 +395,14 @@ class Validator():
 
 	                            # Checks whether at least a target node capability is coherent with that declared in "reqDef"
 	                            if self.checkCapabilitiesType(reqDef,targetCapabilities,targetNode) == False:
-	                                reqError.append([3.2, targetNode.name, reqDef.get("capability")])
+	                                reqError.append([1.4, targetNode.name, reqDef.get("capability")])
 
 	                        # Assigns the relationship type of the target node to "relationshipType"
 	                        if relationship is not None:
 
 	                        	# Check whether the type of the relationship is coherent with that declared in "reqDef" 
 	                            if self.checkRelationshipType(reqDef,relationship,node) == False:
-	                                reqError.append([4.0, targetNode.name])
+	                                reqError.append([1.5, targetNode.name])
 
 	                            # Assigns the type of the target capability to "targetCapabilityType"
 	                            targetCapabilityType = self.checkRelationship(reqDef,relationship,targetNode,node,targetCapability)
@@ -410,18 +410,19 @@ class Validator():
 	                            if targetCapabilityType is None:
 	                            	# Case 1.1 - the targetCapability is defined, but its type is not valid with that required 
 	                            	if targetCapability is not None: 
-	                            		reqError.append([4.1, targetCapability])
+	                            		reqError.append([2.1, targetCapability])
 	                            	# Case 1.2 - the targetCapability is not defined and the target node does not offer valid capabilities
 	                            	else:
-	                            		reqError.append([4.2, targetNode.name])
+	                            		reqError.append([2.2, targetNode.name])
 	                            # Case 2 - the targetCapabilityType is defined
 	                            else:
-	                            	# Case 2.1 - check whether the type of the target capability is coherent with that defined from the target node definition
-	                            	if self.checkValidSourceTypesNode(targetCapabilityType,targetNode,node) == False:
-	                            		reqError.append([5.0, node.type, targetNode.name])
-	                            	# Case 2.2 - check whether the type of the target capability is coherent with that defined from the target capability definition
+									# Case 2.1 - check whether the type of the target capability is coherent with that defined from the target capability definition
 	                            	if self.checkValidSourceTypesCapability(targetCapabilityType,node) == False:
-	                            		reqError.append([6.0, node.type])
+	                            		reqError.append([3.1, node.type])
+	                            	# Case 2.2 - check whether the type of the target capability is coherent with that defined from the target node definition
+	                            	if self.checkValidSourceTypesNode(targetCapabilityType,targetNode,node) == False:
+	                            		reqError.append([3.2, node.type, targetNode.name])
+
 
 	                    if reqError == []:
 	                    	reqError.append([0])
