@@ -218,8 +218,11 @@ class TopologyValidator():
 		# if "validTargetTypes" has been found, returns the "valid_target_types"
 		if validTargetTypes is not None:
 			return validTargetTypes
-		# otherwise, looks for "validTargetTypes" in the parent "nodeType"
-		return self.getValidTargetTypes(relationshipTypeDef.get('derived_from')) 
+		# otherwise, looks for "validTargetTypes" in the parent "relationshipType" (if any)
+		if relationshipTypeDef.has_key("derived_from"):
+			return self.getValidTargetTypes(relationshipTypeDef.get('derived_from')) 
+		# if there is no parent "relationship", returns "None" 
+		return None
 
 	# Returns the field "valid_source_types" of a node with type "nodeType"
 	def getValidSourceTypesNode(self, capabilityType, nodeType):
@@ -240,8 +243,11 @@ class TopologyValidator():
 		# if "validSourceTypes" has been found, returns the "valid_source_types"
 		if validSourceTypes is not None:
 			return validSourceTypes
-		# otherwise, looks for "validSourceTypes" in the parent "nodeType"
-		return self.getValidSourceTypesNode(capabilityType,nodeTypeDef.get('derived_from')) 
+		# otherwise, looks for "validTargetTypes" in the parent "nodeType" (if any)
+		if nodeTypeDef.has_key("derived_from"):
+			return self.getValidSourceTypesNode(capabilityType,nodeTypeDef.get('derived_from')) 
+		# if there is no parent "nodeType", returns "None" 
+		return None
 
 	# Check whether the types of the nodes defined from the field "valid_source_types" of a "target node" are coherent with the type of a "source node"
 	def checkValidSourceTypesNode(self, targetCapabilityType, targetNode, node):
@@ -286,45 +292,6 @@ class TopologyValidator():
 					return True
 			return False
 		return True
-
-	# Print the errors
-	def printError(self, errorList):
-
-		codeError = errorList[0]
-		if codeError == 1.1:
-			print '1.1 - MISSING_REQUIREMENT_DEFINITION: The requirement is assigned but not defined.'
-		elif codeError == 1.2:
-			print '1.2 - NODE_TYPE_NOT_COHERENT: The type "%s" of the target node "%s" is not valid (as it differs from that indicated in the requirement definition).' % (errorList[1], errorList[2])
-		elif codeError == 1.3:
-			print '1.3 - CAPABILITY_TYPE_NOT_COHERENT: The type of the target capability is not valid (as it differs from that indicated in the requirement definition).'
-		elif codeError == 1.4:
-			print '1.4 - MISSING_CAPABILITY_ERROR: The target node template "%s" is not offering any capability whose type is compatible with "%s" (indicated in the requirement definition).' % (errorList[1], errorList[2])
-		elif codeError == 1.5:
-			print '1.5 - RELATIONSHIP_TYPE_NOT_COHERENT: The type of the outgoing relationship is not valid (as it differs from that indicated in the requirement definition).'
-		elif codeError == 2.1:
-			print '2.1 - CAPABILITY_VALID_TARGET_TYPE_ NOT_COHERENT: The type of the target capability "%s" is not valid (as it differs from that indicated in the definition of the type of the outgoing relationship).' %(errorList[1])
-		elif codeError == 2.2:
-			print '2.2 - MISSING_CAPABILITY_VALID_TARGET_TYPE: The target node template "%s" is not offering any capability whose type is compatible with those indicated as valid targets for the type of the outgoing relationship.' % (errorList[1])
-		elif codeError == 3.1:
-			print '3.1 - CAPABILITY_VALID_SOURCE_TYPE_ NOT_COHERENT: The node type "%s" is not a valid source type for the capability targeted by the outgoing relationship (as it differs from those indicated in the capability type).' % (errorList[1])				 
-		elif codeError == 3.2:
-			print '3.2 - CAPABILITY_DEFINITION_VALID_SOURCE_TYPE_NOT_COHERENT: The node type "%s" is not a valid source type for the capability targeted by the outgoing relationship (as it differs from those indicated in the capability definitions in the type of "%s").' % (errorList[1], errorList[2])				 
-
-	# Prints the result of the validation
-	def printValidation(self, validation):
-		isCorrect = True
-		for nodeName in validation:
-			reqs = validation.get(nodeName).keys()
-			for req in reqs:
-				infoList = validation.get(nodeName).get(req)
-				if infoList != []:
-					print "\nNODE TEMPLATE: ",nodeName
-					print "REQUIREMENT: ",req
-				for info in infoList:
-					isCorrect = False
-					self.printError(info)
-		if isCorrect:
-			print "The application topology is valid."
 
 	# Returns a structure with the summarize of the validation
 	def validate(self, path):
