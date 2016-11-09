@@ -47,7 +47,10 @@ class TopologyValidator():
 		if reqDef is not None:
 			return reqDef
 		# otherwise, looks for "capName" in the parent "nodeType"
-		return self.getRequirementDefinition(reqName,nodeTypeDef.get('derived_from'))
+		if nodeTypeDef.has_key('derived_from'):
+			return self.getRequirementDefinition(reqName,nodeTypeDef.get('derived_from'))
+		# if there is no parent "nodeType", returns "None"
+		return None
 
 	# Returns the definition of the capability "capName" in the node type "nodeType" (if any)
 	def getCapabilityDefinition(self, capName, nodeType):
@@ -68,7 +71,10 @@ class TopologyValidator():
 		if capDef is not None:
 			return capDef
 		# otherwise, looks for "capName" in the parent "nodeType"
-		return self.getCapabilityDefinition(capName,nodeTypeDef.get('derived_from'))
+		if nodeTypeDef.has_key('derived_from'):
+			return self.getCapabilityDefinition(capName,nodeTypeDef.get('derived_from'))
+		# if there is no parent "nodeType", returns "None"
+		return None
 
 	# Returns the definition of the node with type "nodeType" (if any)
 	def getTypeDefinition(self, nodeType):
@@ -107,7 +113,8 @@ class TopologyValidator():
 			capabilityType = capability
 		else:
 			if self.getCapabilityDefinition(capability, node.type) is not None:
-				capabilityType = self.getCapabilityDefinition(capability, node.type).get('type')
+				if self.getCapabilityDefinition(capability, node.type).has_key('type'):
+					capabilityType = self.getCapabilityDefinition(capability, node.type).get('type')
 		return capabilityType 
 
 	# Check whether the the type of the capability "capability" is coherent with the type of the capability defined from the requirement definition "reqDef" 
@@ -278,8 +285,11 @@ class TopologyValidator():
 		# if "validSourceTypes" has been found, returns the "valid_source_types"
 		if validSourceTypes is not None:
 			return validSourceTypes
-		# otherwise, looks for "validSourceTypes" in the parent "nodeType"
-		return self.getValidSourceTypesCapability(capTypeDef.get('derived_from')) 	
+		# otherwise, looks for "validSourceTypes" in the parent "capType"
+		if capTypeDef.has_key("derived_from"):
+			return self.getValidSourceTypesCapability(capTypeDef.get('derived_from')) 	
+		# if there is no parent "nodeType", returns "None" 
+		return None 
 
 	# Check whether the types of the nodes defined from the field "valid_source_types" of a capability are coherent with the type of a "source node"
 	def checkValidSourceTypesCapability(self, capabilityType, node):
