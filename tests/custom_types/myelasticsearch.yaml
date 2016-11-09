@@ -1,0 +1,34 @@
+tosca_definitions_version: tosca_simple_yaml_1_0
+
+description: >
+  Elasticsearch is an open-source search engine built on top of Apache Lucene,
+  a full-text search-engine library.
+
+capability_types:
+  tosca.capabilities.MyEndpoint:
+    derived_from: tosca.capabilities.Endpoint
+    valid_source_types: [ tosca.nodes.SoftwareComponent.Kibana ]
+
+  tosca.capabilities.MyEndpoint2:
+    derived_from: tosca.capabilities.Root
+  
+node_types:
+  tosca.nodes.SoftwareComponent.MyElasticsearch:
+    derived_from: tosca.nodes.SoftwareComponent.Elasticsearch
+    capabilities:
+      search_endpoint:
+         type: tosca.capabilities.MyEndpoint
+
+  tosca.nodes.SoftwareComponent.MyElasticsearch2:
+    derived_from: tosca.nodes.SoftwareComponent.Elasticsearch
+    capabilities:
+      endpoint:
+         type: tosca.capabilities.Endpoint
+      search_endpoint:
+         type: tosca.capabilities.MyEndpoint2
+
+  tosca.nodes.SoftwareComponent.MyElasticsearch3:
+    derived_from: tosca.nodes.SoftwareComponent.Elasticsearch
+    capabilities:
+      search_endpoint:
+         type: tosca.capabilities.MyEndpoint2

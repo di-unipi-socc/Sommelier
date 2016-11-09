@@ -1,6 +1,6 @@
 import os
 import sys
-import validator
+import topologyvalidator
 
 from toscaparser.utils.gettextutils import _
 import toscaparser.utils.urlutils
@@ -14,7 +14,7 @@ def check(args):
         msg = _('The program expects "--template-file" as the first '
                 'argument. Please refer to the usage documentation.')
         raise ValueError(msg)
-    
+
 def main(args=None):
     if args is None:
         args = sys.argv[1:]
@@ -23,7 +23,7 @@ def main(args=None):
     path = args[0].split('--template-file=')[1]
 
     if os.path.isfile(path):
-    	v = validator.Validator()
+    	v = topologyvalidator.TopologyValidator()
         validation = v.validate(path)
         v.printValidation(validation)
     else:

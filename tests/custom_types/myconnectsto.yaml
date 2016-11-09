@@ -1,0 +1,13 @@
+relationship_types:
+  tosca.relationships.Connects2:
+    derived_from: tosca.relationships.ConnectsTo
+    valid_target_types: [ tosca.capabilities.MyEndpoint ]
+
+  tosca.relationships.MyConnectsTo:
+    derived_from: tosca.relationships.ConnectsTo
+    valid_target_types: [ tosca.capabilities.MyEndpoint, tosca.capabilities.MyEndpoint2, tosca.capabilities.MyEndpoint3 ]
+
+  tosca.relationships.MyConnects2:
+    derived_from: tosca.relationships.Root
+    valid_target_types: [ tosca.capabilities.Endpoint ]
+

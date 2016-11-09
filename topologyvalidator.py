@@ -1,7 +1,7 @@
 from toscaparser.elements.entity_type import EntityType
 from toscaparser.tosca_template import ToscaTemplate
 
-class Validator():
+class TopologyValidator():
 
 	customDefinition = {}
 	toscaBaseTypes = {}
@@ -291,44 +291,40 @@ class Validator():
 	def printError(self, errorList):
 
 		codeError = errorList[0]
-		if codeError == 0:
-			print '\tOK: the requirement is valid.\n'
-		elif codeError == 1:
-			print '\tMISSING_REQUIREMENT_DEFINITION: the requirement is assigned but not defined.\n'
-		elif codeError == 2:
-			print '\tNODE_TYPE_NOT_COHERENT: the type "%s" of "%s" is not coherent with the required type.' % (errorList[1], errorList[2]), '\n'
+		if codeError == 1.1:
+			print '1.1 - MISSING_REQUIREMENT_DEFINITION: The requirement is assigned but not defined.\n'
+		elif codeError == 1.2:
+			print '1.2 - NODE_TYPE_NOT_COHERENT: The type "%s" of the target node "%s" is not valid (as it differs from that indicated in the requirement definition).' % (errorList[1], errorList[2]), '\n'
+		elif codeError == 1.3:
+			print '1.3 - CAPABILITY_TYPE_NOT_COHERENT: The type of the target capability is not valid (as it differs from that indicated in the requirement definition).\n'
+		elif codeError == 1.4:
+			print '1.4 - MISSING_CAPABILITY_ERROR: The target node template "%s" is not offering any capability whose type is compatible with "%s" (indicated in the requirement definition).' % (errorList[1], errorList[2]), '\n'
+		elif codeError == 1.5:
+			print '1.5 - RELATIONSHIP_TYPE_NOT_COHERENT: The type of the outgoing relationship is not valid (as it differs from that indicated in the requirement definition).\n'
+		elif codeError == 2.1:
+			print '2.1 - CAPABILITY_VALID_TARGET_TYPE_ NOT_COHERENT: The type of the target capability "%s" is not valid (as it differs from that indicated in the definition of the type of the outgoing relationship).' %(errorList[1]), '\n'
+		elif codeError == 2.2:
+			print '2.2 - MISSING_CAPABILITY_VALID_TARGET_TYPE: The target node template "%s" is not offering any capability whose type is compatible with those indicated as valid targets for the type of the outgoing relationship.' % (errorList[1]), '\n'
 		elif codeError == 3.1:
-			print '\tCAPABILITY_TYPE_NOT_COHERENT: the capability type is not coherent with the required type.\n'
+			print '3.1 - CAPABILITY_VALID_SOURCE_TYPE_ NOT_COHERENT: The node type "%s" is not a valid source type for the capability targeted by the outgoing relationship (as it differs from those indicated in the capability type).' % (errorList[1]), '\n'				 
 		elif codeError == 3.2:
-			print '\tMISSING_CAPABILITY_ERROR: "%s" does not offer any capability of type "%s".' % (errorList[1], errorList[2]), '\n'
-		elif codeError == 4.0:
-			print '\tRELATIONSHIP_TYPE_NOT_COHERENT: the relationship with the target node "%s" is not valid.' % (errorList[1]), '\n'
-		elif codeError == 4.1:
-			print '\tCAPABILITY_VALID_TARGET_TYPE_ NOT_COHERENT: the capability type "%s" is not valid for the relationship.' %(errorList[1]), '\n'
-		elif codeError == 4.2:
-			print '\tMISSING_CAPABILITY_VALID_TARGET_TYPE: "%s" does not offer capabilities valid for the relationship.' % (errorList[1]), '\n'
-		elif codeError == 5:
-			print '\tNODE_VALID_SOURCE_TYPE_ NOT_COHERENT: the type "%s" is not supported as valid sources of the relationship established to the target node "%s".' % (errorList[1], errorList[2]), '\n'
-		elif codeError == 6:
-			print '\tCAPABILITY_VALID_SOURCE_TYPE_ NOT_COHERENT: the type "%s" is not supported as valid sources of the relationship established to the declared capability type.' % (errorList[1]), '\n'				 
+			print '3.2 - CAPABILITY_DEFINITION_VALID_SOURCE_TYPE_NOT_COHERENT: The node type "%s" is not a valid source type for the capability targeted by the outgoing relationship (as it differs from those indicated in the capability definitions in the type of "%s").' % (errorList[1], errorList[2]), '\n'				 
 
 	# Prints the result of the validation
 	def printValidation(self, validation):
-
+		isCorrect = True
 		for nodeName in validation:
-			print "*********************************"
-			print "*********************************"
-			print "\nNODE TEMPLATE: ",nodeName
-			if validation.get(nodeName) == {}:
-				print 
-			for req in validation.get(nodeName).keys(): 
-				print "\n- Requirement:", req
-				for errorList in validation.get(nodeName).get(req):
-					print
-					self.printError(errorList)
-
-		print "*********************************"
-		print "*********************************"
+			reqs = validation.get(nodeName).keys()
+			for req in reqs:
+				infoList = validation.get(nodeName).get(req)
+				for info in infoList:
+					if info[0] is not 0:
+						isCorrect = False
+						print "\nNODE TEMPLATE: ",nodeName
+						print "REQUIREMENT: ",req
+						self.printError(info)
+		if isCorrect:
+			print "The application topology is valid."
 
 	# Returns a structure with the summarize of the validation
 	def validate(self, path):
@@ -359,7 +355,7 @@ class Validator():
 	                    # Gets the requirement definition of "rName"
 	                    reqDef = self.getRequirementDefinition(rName,node.type)
 	                    if (reqDef is None):
-	                        reqError.append([1.0])
+	                        reqError.append([1.1])
 	                    else:
 	                        # Isolates the names of the target node and capability
 	                        targetNode = None
@@ -385,13 +381,13 @@ class Validator():
 
 	                        # Checks whether the target node type is coherent with that declared in "reqDef"
 	                        if (self.checkNodeType(reqDef,targetNode.type) is False):
-	                            reqError.append([2.0, targetNode.type, targetNode.name])
+	                            reqError.append([1.2, targetNode.type, targetNode.name])
 
 	                        # Assigns the capability type of the target node to "targetCapabilityType"
 	                        if targetCapability is not None:
 	                            # Checks whether the target node capability is coherent with that declared in "reqDef"
 	                            if self.checkCapabilityType(reqDef, targetCapability, targetNode) is False:  
-	                                reqError.append([3.1])
+	                                reqError.append([1.3])
 
 	                        else:
 	                            # Retrieves the capabilities of the target node
@@ -399,14 +395,14 @@ class Validator():
 
 	                            # Checks whether at least a target node capability is coherent with that declared in "reqDef"
 	                            if self.checkCapabilitiesType(reqDef,targetCapabilities,targetNode) == False:
-	                                reqError.append([3.2, targetNode.name, reqDef.get("capability")])
+	                                reqError.append([1.4, targetNode.name, reqDef.get("capability")])
 
 	                        # Assigns the relationship type of the target node to "relationshipType"
 	                        if relationship is not None:
 
 	                        	# Check whether the type of the relationship is coherent with that declared in "reqDef" 
 	                            if self.checkRelationshipType(reqDef,relationship,node) == False:
-	                                reqError.append([4.0, targetNode.name])
+	                                reqError.append([1.5, targetNode.name])
 
 	                            # Assigns the type of the target capability to "targetCapabilityType"
 	                            targetCapabilityType = self.checkRelationship(reqDef,relationship,targetNode,node,targetCapability)
@@ -414,18 +410,19 @@ class Validator():
 	                            if targetCapabilityType is None:
 	                            	# Case 1.1 - the targetCapability is defined, but its type is not valid with that required 
 	                            	if targetCapability is not None: 
-	                            		reqError.append([4.1, targetCapability])
+	                            		reqError.append([2.1, targetCapability])
 	                            	# Case 1.2 - the targetCapability is not defined and the target node does not offer valid capabilities
 	                            	else:
-	                            		reqError.append([4.2, targetNode.name])
+	                            		reqError.append([2.2, targetNode.name])
 	                            # Case 2 - the targetCapabilityType is defined
 	                            else:
-	                            	# Case 2.1 - check whether the type of the target capability is coherent with that defined from the target node definition
-	                            	if self.checkValidSourceTypesNode(targetCapabilityType,targetNode,node) == False:
-	                            		reqError.append([5.0, node.type, targetNode.name])
-	                            	# Case 2.2 - check whether the type of the target capability is coherent with that defined from the target capability definition
+									# Case 2.1 - check whether the type of the target capability is coherent with that defined from the target capability definition
 	                            	if self.checkValidSourceTypesCapability(targetCapabilityType,node) == False:
-	                            		reqError.append([6.0, node.type])
+	                            		reqError.append([3.1, node.type])
+	                            	# Case 2.2 - check whether the type of the target capability is coherent with that defined from the target node definition
+	                            	if self.checkValidSourceTypesNode(targetCapabilityType,targetNode,node) == False:
+	                            		reqError.append([3.2, node.type, targetNode.name])
+
 
 	                    if reqError == []:
 	                    	reqError.append([0])
