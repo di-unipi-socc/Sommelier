@@ -1,7 +1,7 @@
 from toscaparser.elements.entity_type import EntityType
 from toscaparser.tosca_template import ToscaTemplate
 
-class Validator():
+class TopologyValidator():
 
 	customDefinition = {}
 	toscaBaseTypes = {}
