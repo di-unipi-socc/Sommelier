@@ -318,11 +318,10 @@ class TopologyValidator():
 			for req in reqs:
 				infoList = validation.get(nodeName).get(req)
 				for info in infoList:
-					if info[0] is not 0:
-						isCorrect = False
-						print "\nNODE TEMPLATE: ",nodeName
-						print "REQUIREMENT: ",req
-						self.printError(info)
+					isCorrect = False
+					print "\nNODE TEMPLATE: ",nodeName
+					print "REQUIREMENT: ",req
+					self.printError(info)
 		if isCorrect:
 			print "The application topology is valid."
 
@@ -422,10 +421,6 @@ class TopologyValidator():
 	                            	# Case 2.2 - check whether the type of the target capability is coherent with that defined from the target node definition
 	                            	if self.checkValidSourceTypesNode(targetCapabilityType,targetNode,node) == False:
 	                            		reqError.append([3.2, node.type, targetNode.name])
-
-
-	                    if reqError == []:
-	                    	reqError.append([0])
 
 	                    validation[node.name].update({rName: reqError})
 	                    
