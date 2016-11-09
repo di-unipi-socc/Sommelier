@@ -339,7 +339,6 @@ class TopologyValidator():
 	        if nodetemplates:
 	            for node in nodetemplates:
 
-	                relatedNode = node.related_nodes
 	                relationshipNode = []
 	                capabilityNode = []
 
