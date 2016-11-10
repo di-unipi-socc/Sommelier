@@ -355,6 +355,12 @@ class TopologyValidator():
 	                        # Retrieves the dictionary defining the target node 
 	                        targetNode = self.getNode(targetNode,nodetemplates)
 
+	                        # Check if there is a target node
+	                        if targetNode is None:
+	                        	reqError.append([1.1])
+	                        	validation[node.name].update({rName: reqError})
+	                        	break
+
 	                        # Checks whether the target node type is coherent with that declared in "reqDef"
 	                        if (self.checkNodeType(reqDef,targetNode.type) is False):
 	                            reqError.append([1.2, targetNode.type, targetNode.name])
