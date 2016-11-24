@@ -45,6 +45,8 @@ To effectively be executed on a `bash` shell, Sommelier requires such shell to s
  * `tosca-parser` (which can be installed by typing `sudo pip install 'tosca-parser'`).
 
 ### Running Sommelier
-To run Sommelier, just type `python sommelier.py --template-file=[topology-template-file-name]`
+To exploit Sommelier to validate a TOSCA application topology, please proceed as follows:
+ 1. Move inside the (cloned) folder of the Sommelier repository (i.e., the folder that contains the Python file `sommelier.py`)
+ 2. Type `python sommelier.py --template-file=[topology-template-file-path]`
 
 
