@@ -36,11 +36,13 @@ If you wish to exploit Sommelier to carry out research activities, or if you wis
  6. The results of the validation are displayed by Sommelier.
  
 ## Using Sommelier
+Sommelier is designed to run on `bash` shells.
 
 ### Prerequisites
- * `python` installed,
- * `pip` installed, and
- * `tosca-parser` installed (`sudo pip install 'tosca-parser'`).
+To effectively be executed on a `bash` shell, Sommelier requires such shell to support the following commands:
+ * `python`,
+ * `pip`, and
+ * `tosca-parser` (which can be installed by typing `sudo pip install 'tosca-parser'`).
 
 ### Running Sommelier
 To run Sommelier, just type `python sommelier.py --template-file=[topology-template-file-name]`
