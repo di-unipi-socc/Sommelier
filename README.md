@@ -21,7 +21,7 @@ If you wish to exploit Sommelier to carry out research activities, or if you wis
 
 ### How Sommelier works
 
-![sommelier](../figs/sommelier.png)
+![sommelier](figs/sommelier.png)
 
  1.  Sommelier takes as input either a [YAML](http://yaml.org/spec/) file or a [CSAR](http://docs.oasis-open.org/tosca/TOSCA-Simple-Profile-YAML/v1.0/cos01/TOSCA-Simple-Profile-YAML-v1.0-cos01.html#_Toc461787381) archive containing the TOSCA application topology to be validated.
  
