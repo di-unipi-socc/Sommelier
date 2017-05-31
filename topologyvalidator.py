@@ -32,10 +32,6 @@ class TopologyValidator():
 	def getRequirementDefinition(self, reqName, nodeType):
 		nodeTypeDef = self.getTypeDefinition(nodeType)
 
-		# if "nodeType" is not defined, returns "None"
-		if nodeTypeDef is None:
-			return None
-
 		# check whether "nodeType" defines "reqName"
 		reqDef = None
 		if nodeTypeDef.has_key("requirements"): 
@@ -56,10 +52,6 @@ class TopologyValidator():
 	def getCapabilityDefinition(self, capName, nodeType):
 		nodeTypeDef = self.getTypeDefinition(nodeType)
 
-		# if "nodeType" is not defined, returns "None"
-		if nodeTypeDef is None:
-			return None
-
 		# check whether "nodeType" defines "capName"
 		capDef = None
 		if nodeTypeDef.has_key("capabilities"): 
@@ -67,14 +59,11 @@ class TopologyValidator():
 			if capName in capDefinitions:
 				capDef = capDefinitions.get(capName)
 
-		# if "capName" has been found, returns the corresponding "capDef"
-		if capDef is not None:
-			return capDef
-		# otherwise, looks for "capName" in the parent "nodeType"
-		if nodeTypeDef.has_key('derived_from'):
+		# if "capName" has not been found, looks for "capName" in the parent "nodeType" (if any)
+		if capDef is None and nodeTypeDef.has_key('derived_from'):
 			return self.getCapabilityDefinition(capName,nodeTypeDef.get('derived_from'))
-		# if there is no parent "nodeType", returns "None"
-		return None
+		
+		return capDef
 
 	# Returns the definition of the node with type "nodeType" (if any)
 	def getTypeDefinition(self, nodeType):
@@ -84,9 +73,7 @@ class TopologyValidator():
 			typeDef = self.customDefinition.get(nodeType)
 		elif self.toscaBaseTypes.has_key(nodeType):
 		    typeDef = self.toscaBaseTypes.get(nodeType)
-		else:
-			return None
-
+		
 		return typeDef
 
 	# Returns the node template of the node called "nodeName" (if any)
@@ -184,7 +171,7 @@ class TopologyValidator():
 
 			# Assigns the valid_target_types of the relationship to "validTargetTypes"
 			validTargetTypes = self.getValidTargetTypes(relationshipType)
-			if validTargetTypes is not [] or validTargetTypes is not None: # PASSA LA VERIFICA
+			if validTargetTypes is not [] and validTargetTypes is not None: # PASSA LA VERIFICA
 				# Case 1 - the relationship_template of the target is a capability
 				if targetCapability is not None:
 					# Assigns the capability type of the "target capability" to "targetCapabilityType"
@@ -198,25 +185,18 @@ class TopologyValidator():
 				else:
 					# Retrieves the capabilities of the target node
 					targetCapabilities = targetNode.get_capabilities()
-					if targetCapabilities == []:
-						return None
-					else:
-						# Check whether the capability type of the target node are coherent with the capabilities type of the valid_target_type
-						for cap in targetCapabilities:
-							capType = self.getCapabilityType(cap,targetNode)
-							for validTargetType in validTargetTypes:
-								if self.checkTypeCoherence(capType,validTargetType) == True:
-									return capType
-						return None
+					# Check whether the capability type of the target node are coherent with the capabilities type of the valid_target_type
+					for cap in targetCapabilities:
+						capType = self.getCapabilityType(cap,targetNode)
+						for validTargetType in validTargetTypes:
+							if self.checkTypeCoherence(capType,validTargetType) == True:
+								return capType
+					return None
 
 	# Returns the field "valid_target_types" of the relationship with type "relationshipType"
 	def getValidTargetTypes(self, relationshipType):
 
 		relationshipTypeDef = self.getTypeDefinition(relationshipType)  
-
-		# if "relationshipType" is not defined, returns "None"
-		if relationshipTypeDef is None:
-			return None
 		
 		validTargetTypes = None
 		if relationshipTypeDef.has_key("valid_target_types"): 
@@ -235,10 +215,6 @@ class TopologyValidator():
 	def getValidSourceTypesNode(self, capabilityType, nodeType):
 
 		nodeTypeDef = self.getTypeDefinition(nodeType)  
-
-		# if "nodeTypeDef" is not defined, returns "None"
-		if nodeTypeDef is None:
-			return None
 		
 		validSourceTypes = None
 		if nodeTypeDef.has_key("capabilities"): 
@@ -263,7 +239,6 @@ class TopologyValidator():
 		
 		if validSourceTypes is not None:
 			for elem in validSourceTypes:
-				#print checkTypeCoherence(node.type,elem), node.type, elem
 				if self.checkTypeCoherence(node.type,elem) is True:
 					return True  
 			return False
@@ -273,10 +248,6 @@ class TopologyValidator():
 	def getValidSourceTypesCapability(self, capabilityType):
 
 		capTypeDef = self.getTypeDefinition(capabilityType)
-
-		# if "capTypeDef" is not defined, returns "None"
-		if capTypeDef is None:
-			return None
 
 		validSourceTypes = None
 		if capTypeDef.has_key("valid_source_types"):
