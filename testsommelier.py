@@ -38,7 +38,7 @@ class Test_Sommelier(unittest.TestCase):
 
     def test_1_1_missingTarget(self):
 
-        path = "tests/tosca_elk_mod.yaml"
+        path = "tests/tosca_elk_coverage.yaml"
         v = topologyvalidator.TopologyValidator()
         validation = v.validate(path)
         self.assertIn('app_rsyslog', validation)
