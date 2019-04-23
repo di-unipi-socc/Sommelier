@@ -7,15 +7,22 @@ Sommelier is a prototype, command-line tool for **validating TOSCA application t
 ### Validation constraints
 All the validation constraints that are checked by Sommelier have been defined in the research paper:
  > _A. Brogi, A. Di Tommaso, J. Soldani. <br>
- > **Validating TOSCA application topologies.** <br>
- > Submitted for publication_
+ > **Sommelier: A Tool for Validating TOSCA Application Topologies.** <br>
+ > In: Pires L., Hammoudi S., Selic B. (eds) Model-Driven Engineering and Software Development. MODELSWARD 2017. Communications in Computer and Information Science, vol 880. Springer, Cham_
 
 If you wish to exploit Sommelier to carry out research activities, or if you wish to reuse its sources, please properly cite the above mentioned paper. Below you can find the BibTex reference:
 ```
-@article{Sommelier,
- author = {Brogi, Antonio and Di~Tommaso, Antonio and Soldani, Jacopo},
- title = {Validating TOSCA application topologies},
- note = {\em [Submitted for publication]}
+@inproceedings{sommelier,
+  author={Brogi, Antonio and Di~Tommaso, Antonio and Soldani, Jacopo},
+  editor={Pires, Lu{\'i}s Ferreira and Hammoudi, Slimane and Selic, Bran},
+  title={Sommelier: A Tool for Validating TOSCA Application Topologies},
+  booktitle={Model-Driven Engineering and Software Development},
+  year={2018},
+  publisher={Springer International Publishing},
+  pages={1--22},
+  isbn={978-3-319-94764-8}
+}
+
 } 
 ```
 
