@@ -11,7 +11,8 @@ All the validation constraints that are checked by Sommelier have been defined i
  > In: Pires L., Hammoudi S., Selic B. (eds) Model-Driven Engineering and Software Development. MODELSWARD 2017. Communications in Computer and Information Science, vol 880. Springer, Cham_
 
 If you wish to exploit Sommelier to carry out research activities, or if you wish to reuse its sources, please properly cite the above mentioned paper. Below you can find the BibTex reference:
-```
+
+```bibtex
 @inproceedings{sommelier,
   author={Brogi, Antonio and Di~Tommaso, Antonio and Soldani, Jacopo},
   editor={Pires, Lu{\'i}s Ferreira and Hammoudi, Slimane and Selic, Bran},
@@ -21,8 +22,6 @@ If you wish to exploit Sommelier to carry out research activities, or if you wis
   publisher={Springer International Publishing},
   pages={1--22},
   isbn={978-3-319-94764-8}
-}
-
 } 
 ```
 
